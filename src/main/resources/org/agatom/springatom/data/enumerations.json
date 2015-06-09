@@ -1,0 +1,129 @@
+{
+   "enumerations": [
+      {
+         "name": "APPOINTMENT_TASK_TYPES",
+         "entries": [
+            {
+               "key": "SAT_REPAIR",
+               "value": "Naprawa",
+               "comment": "Wykonanie naprawy pojazdu"
+            },
+            {
+               "key": "SAT_NORMAL",
+               "value": "Wizyta",
+               "comment": "Standardowa wizyta w warsztacie."
+            },
+            {
+               "key": "SAT_OIL_CHANGE",
+               "value": "Wymiana oleju",
+               "comment": "Wymiana oleju"
+            }
+         ]
+      },
+      {
+         "name": "CAR_FUEL_TYPES",
+         "entries": [
+            {
+               "key": "GASOLINE",
+               "value": "Benzyna",
+               "comment": "Benzyna"
+            },
+            {
+               "key": "GASOLINE_GAS",
+               "value": "Banzyna + gaz",
+               "comment": "Banzyna + gaz"
+            },
+            {
+               "key": "DIESEL",
+               "value": "Diesel",
+               "comment": "Diesel"
+            },
+            {
+               "key": "GAS",
+               "value": "Gaz",
+               "comment": "Gaz"
+            },
+            {
+               "key": "ORGANIC",
+               "value": "Biopaliwo",
+               "comment": "Organiczne BIO Paliwo"
+            }
+         ]
+      },
+      {
+         "name": "APPOINTMENT_ISSUE_TYPES",
+         "entries": [
+            {
+               "key": "SCPR_APP_CANCELED",
+               "value": "Anulowanie spotkania",
+               "comment": "Spotkanie zostało anulowane"
+            },
+            {
+               "key": "SNT_APP_DONE",
+               "value": "Spotkanie zakończone",
+               "comment": "Spotkanie zostało zakończone"
+            },
+            {
+               "key": "SNT_APP_REJECTED",
+               "value": "Spotkanie odrzucone",
+               "comment": "Spotkanie zostało odrzucone"
+            }
+         ]
+      },
+      {
+         "name": "CONTACT_TYPES",
+         "entries": [
+            {
+               "key": "SCT_FAX",
+               "value": "Fax",
+               "comment": "Numer fax"
+            },
+            {
+               "key": "SCT_MAIL",
+               "value": "Mail",
+               "comment": "Email"
+            },
+            {
+               "key": "SCT_CELL_PHONE",
+               "value": "Numer komórkowy",
+               "comment": "Numer komórkowy"
+            },
+            {
+               "key": "SCT_PHONE",
+               "value": "Numer domowy",
+               "comment": "Numer domowy"
+            },
+            {
+               "key": "SCT_BUSINESS_PHONE",
+               "value": "Numer biznesowy",
+               "comment": "Numer biznesowy, do kontaktów biznesowych"
+            }
+         ]
+      },
+      {
+         "name": "ISSUE_TYPES",
+         "entries": [
+            {
+               "key": "SCPR_DEBTS",
+               "value": "Dług",
+               "comment": "Sygnalizuje dług użytkownika"
+            },
+            {
+               "key": "SCPR_FAKE_ID",
+               "value": "Fałszywe dane",
+               "comment": "Sygnalizuje fałszywe dane"
+            },
+            {
+               "key": "SCPR_MISSED_APP",
+               "value": "Opuszczona wizyta",
+               "comment": "Sygnalizuje, że użytkownik nie stawił się na wizytę"
+            },
+            {
+               "key": "SCPR_NO_PAYMENT",
+               "value": "Brak płatności w terminie",
+               "comment": "Sygnalizuje, że użytkownik nie zapłacił w terminie"
+            }
+         ]
+      }
+   ]
+}

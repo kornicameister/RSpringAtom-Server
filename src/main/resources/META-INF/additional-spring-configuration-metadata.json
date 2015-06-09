@@ -1,0 +1,9 @@
+{
+   "properties": [
+      {
+         "name"       : "sa.boot.enabled",
+         "type"       : "java.lang.String",
+         "description": "Description for sa.boot.enabled."
+      }
+   ]
+}
