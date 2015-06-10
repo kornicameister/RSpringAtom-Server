@@ -1,7 +1,7 @@
-package org.agatom.springatom.mvc.security.core;
+package org.agatom.springatom.security.core;
 
 
-import org.agatom.springatom.mvc.security.token.TokenInfo;
+import org.agatom.springatom.security.token.TokenInfo;
 
 import java.util.function.Predicate;
 

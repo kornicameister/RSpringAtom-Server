@@ -1,7 +1,7 @@
-package org.agatom.springatom.mvc.security.core;
+package org.agatom.springatom.security.core;
 
 
-import org.agatom.springatom.mvc.security.token.TokenInfo;
+import org.agatom.springatom.security.token.TokenInfo;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,15 +22,15 @@ public interface TokenService {
   Map<String, UserDetails> getValidUsers();
 
   class InvalidTokenException
-      extends AuthenticationException {
+    extends AuthenticationException {
     private static final long serialVersionUID = -6578462071390347376L;
 
-    public InvalidTokenException(final String msg, final Throwable t) {
-      super(msg, t);
+    public InvalidTokenException(final String token, final Throwable t) {
+      super(token, t);
     }
 
-    public InvalidTokenException(final String msg) {
-      super(msg);
+    public InvalidTokenException(final String token) {
+      super(String.format("Token %s is invalid", token));
     }
   }
 

@@ -1,4 +1,4 @@
-package org.agatom.springatom.mvc.security.core;
+package org.agatom.springatom.security.core;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

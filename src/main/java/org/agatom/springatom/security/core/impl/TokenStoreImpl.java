@@ -1,12 +1,12 @@
-package org.agatom.springatom.mvc.security.core.impl;
+package org.agatom.springatom.security.core.impl;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.FluentIterable;
-import org.agatom.springatom.mvc.security.SecurityProperties;
-import org.agatom.springatom.mvc.security.core.TokenStore;
-import org.agatom.springatom.mvc.security.token.TokenInfo;
+import org.agatom.springatom.security.SSecurityProperties;
+import org.agatom.springatom.security.core.TokenStore;
+import org.agatom.springatom.security.token.TokenInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -29,11 +29,11 @@ import java.util.function.Predicate;
 @Validated
 class TokenStoreImpl
     implements TokenStore {
-  private static final Logger                        LOGGER             = LogManager.getLogger(TokenStoreImpl.class);
-  private static final Marker                        TS_C_MARKER        = MarkerManager.getMarker("TokenStore::Cache");
+  private static final Logger                        LOGGER              = LogManager.getLogger(TokenStoreImpl.class);
+  private static final Marker                        TS_C_MARKER         = MarkerManager.getMarker("TokenStore::Cache");
   @Autowired
-  private              SecurityProperties            securityProperties = null;
-  private              Cache<UserDetails, TokenInfo> cache              = null;
+  private              SSecurityProperties           SSecurityProperties = null;
+  private              Cache<UserDetails, TokenInfo> cache               = null;
 
   @Scheduled(fixedRate = 60 * 1000)
   private void logCacheStats() {
@@ -44,14 +44,14 @@ class TokenStoreImpl
 
   @PostConstruct
   private void setUp() {
-    final SecurityProperties.Token token = this.securityProperties.getToken();
+    final SSecurityProperties.Token token = this.SSecurityProperties.getToken();
 
     this.cache = CacheBuilder.<String, TokenInfo>newBuilder()
-        .expireAfterWrite(token.getTtl(), TimeUnit.MILLISECONDS)
-        .initialCapacity(token.getInitialSize())
-        .weakKeys()
-        .recordStats()
-        .build();
+      .expireAfterWrite(token.getTtl(), TimeUnit.MILLISECONDS)
+      .initialCapacity(token.getInitialSize())
+      .weakKeys()
+      .recordStats()
+      .build();
   }
 
   @PreDestroy
@@ -63,7 +63,7 @@ class TokenStoreImpl
   public TokenInfo store(final TokenInfo info) {
     final DateTime issuedAt = DateTime.now();
     info.setIssuedAt(issuedAt)
-        .setExpiresAt(issuedAt.plusMillis((int) this.securityProperties.getToken().getTtl()));
+      .setExpiresAt(issuedAt.plusMillis((int) this.SSecurityProperties.getToken().getTtl()));
 
     this.cache.put(info.getUserDetails(), info);
 
@@ -73,8 +73,8 @@ class TokenStoreImpl
   @Override
   public TokenInfo read(final Predicate<TokenInfo> predicate) {
     final Collection<TokenInfo> values = this.cache
-        .asMap()
-        .values();
+      .asMap()
+      .values();
 
     final Optional<TokenInfo> first = FluentIterable.from(values).filter(predicate::test).first();
     if (first.isPresent()) {

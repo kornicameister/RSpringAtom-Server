@@ -1,9 +1,9 @@
-package org.agatom.springatom.mvc.security.core.impl;
+package org.agatom.springatom.security.core.impl;
 
-import org.agatom.springatom.mvc.security.core.AuthenticationService;
-import org.agatom.springatom.mvc.security.core.TokenService;
-import org.agatom.springatom.mvc.security.core.TokenService.InvalidTokenException;
-import org.agatom.springatom.mvc.security.token.TokenInfo;
+import org.agatom.springatom.security.core.AuthenticationService;
+import org.agatom.springatom.security.core.TokenService;
+import org.agatom.springatom.security.core.TokenService.InvalidTokenException;
+import org.agatom.springatom.security.token.TokenInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.MarkerManager;
@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

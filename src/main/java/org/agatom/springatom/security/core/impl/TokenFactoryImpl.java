@@ -1,6 +1,6 @@
-package org.agatom.springatom.mvc.security.core.impl;
+package org.agatom.springatom.security.core.impl;
 
-import org.agatom.springatom.mvc.security.core.TokenFactory;
+import org.agatom.springatom.security.core.TokenFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.SerializationUtils;

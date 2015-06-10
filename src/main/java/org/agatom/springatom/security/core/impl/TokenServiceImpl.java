@@ -1,18 +1,15 @@
-package org.agatom.springatom.mvc.security.core.impl;
+package org.agatom.springatom.security.core.impl;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
-import org.agatom.springatom.mvc.security.core.TokenFactory;
-import org.agatom.springatom.mvc.security.core.TokenService;
-import org.agatom.springatom.mvc.security.core.TokenStore;
-import org.agatom.springatom.mvc.security.token.TokenInfo;
+import org.agatom.springatom.security.core.TokenFactory;
+import org.agatom.springatom.security.core.TokenService;
+import org.agatom.springatom.security.core.TokenStore;
+import org.agatom.springatom.security.token.TokenInfo;
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nullable;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Map;

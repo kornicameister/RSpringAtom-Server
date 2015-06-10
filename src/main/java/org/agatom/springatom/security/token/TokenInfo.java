@@ -1,4 +1,4 @@
-package org.agatom.springatom.mvc.security.token;
+package org.agatom.springatom.security.token;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,13 +19,17 @@ public class TokenInfo
   @JsonIgnore
   private              UserDetails userDetails      = null;
 
+  public TokenInfo(final String token) {
+    this();
+    this.token = token;
+  }
+
   public TokenInfo() {
     this.issuedAt = DateTime.now();
   }
 
-  public TokenInfo(final String token) {
-    this();
-    this.token = token;
+  public DateTime getIssuedAt() {
+    return issuedAt;
   }
 
   public TokenInfo setIssuedAt(final DateTime issuedAt) {
@@ -33,9 +37,17 @@ public class TokenInfo
     return this;
   }
 
+  public DateTime getExpiresAt() {
+    return expiresAt;
+  }
+
   public TokenInfo setExpiresAt(final DateTime expiresAt) {
     this.expiresAt = expiresAt;
     return this;
+  }
+
+  public String getToken() {
+    return token;
   }
 
   public TokenInfo setToken(final String token) {
@@ -43,16 +55,8 @@ public class TokenInfo
     return this;
   }
 
-  public DateTime getIssuedAt() {
-    return issuedAt;
-  }
-
-  public DateTime getExpiresAt() {
-    return expiresAt;
-  }
-
-  public String getToken() {
-    return token;
+  public UserDetails getUserDetails() {
+    return userDetails;
   }
 
   public TokenInfo setUserDetails(final UserDetails userDetails) {
@@ -60,8 +64,9 @@ public class TokenInfo
     return this;
   }
 
-  public UserDetails getUserDetails() {
-    return userDetails;
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(token);
   }
 
   @Override
@@ -72,11 +77,6 @@ public class TokenInfo
     TokenInfo that = (TokenInfo) o;
 
     return Objects.equal(this.token, that.token);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(token);
   }
 
   @Override
