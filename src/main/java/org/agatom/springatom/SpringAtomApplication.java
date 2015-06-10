@@ -1,10 +1,12 @@
 package org.agatom.springatom;
 
+import com.google.common.cache.CacheBuilderSpec;
 import org.agatom.springatom.data.DataConfiguration;
 import org.agatom.springatom.data.loader.DataLoaderConfiguration;
 import org.agatom.springatom.data.loader.mgr.DataLoaderManager;
 import org.agatom.springatom.data.repo.RepositoryConfiguration;
 import org.agatom.springatom.data.service.ServicesConfiguration;
+import org.agatom.springatom.mvc.security.SecurityConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +24,10 @@ import javax.annotation.PostConstruct;
 @EnableCaching
 @SpringBootApplication
 @EnableConfigurationProperties
-@Import(DataConfiguration.class)
+@Import({
+    DataConfiguration.class,
+    SecurityConfiguration.class
+})
 public class SpringAtomApplication {
   @Autowired
   private DataLoaderManager dataLoaderManager = null;
@@ -33,7 +38,9 @@ public class SpringAtomApplication {
 
   @Bean
   public CacheManager cacheManager(){
-    return new GuavaCacheManager();
+    final GuavaCacheManager manager = new GuavaCacheManager();
+    manager.setAllowNullValues(false);
+    return manager;
   }
 
   @PostConstruct
