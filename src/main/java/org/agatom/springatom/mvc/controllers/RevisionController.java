@@ -34,7 +34,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(
-  value = "/revisions/"
+  value = "/sa/revisions/"
 )
 class RevisionController {
   @Autowired
