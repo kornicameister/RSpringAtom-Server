@@ -1,6 +1,6 @@
 package org.agatom.springatom.security;
 
-import org.agatom.springatom.security.filter.TokenAuthenticationFilter;
+import org.agatom.springatom.security.support.TokenAuthenticationFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

@@ -3,6 +3,7 @@ package org.agatom.springatom.security.core.impl;
 import org.agatom.springatom.security.core.AuthenticationService;
 import org.agatom.springatom.security.core.TokenService;
 import org.agatom.springatom.security.core.TokenService.InvalidTokenException;
+import org.agatom.springatom.security.core.TokenService.TokenExpiredException;
 import org.agatom.springatom.security.token.TokenInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 class AuthenticationServiceImpl
-    implements AuthenticationService {
+  implements AuthenticationService {
   private static final Logger LOGGER = LogManager.getLogger(AuthenticationServiceImpl.class);
   @Autowired
   private ApplicationContext    applicationContext;
@@ -52,21 +53,28 @@ class AuthenticationServiceImpl
     final UserDetails userDetails = this.tokenManager.getUserDetails(token);
     if (userDetails == null) {
       throw new InvalidTokenException(token);
+    } else if (this.tokenManager.isTokenExpired(token)) {
+
+      this.tokenManager.removeToken(token);
+      SecurityContextHolder.clearContext();
+
+      throw new TokenExpiredException(token);
     }
 
     SecurityContextHolder
-        .getContext()
-        .setAuthentication(
-            new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-            )
-        );
+      .getContext()
+      .setAuthentication(
+        new UsernamePasswordAuthenticationToken(
+          userDetails,
+          null,
+          userDetails.getAuthorities()
+        )
+      );
   }
 
   @Override
   public void logout(final String token) {
+    this.tokenManager.removeToken(token);
     SecurityContextHolder.clearContext();
   }
 

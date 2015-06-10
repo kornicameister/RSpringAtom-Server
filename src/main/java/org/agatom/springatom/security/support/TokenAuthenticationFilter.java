@@ -1,4 +1,4 @@
-package org.agatom.springatom.security.filter;
+package org.agatom.springatom.security.support;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

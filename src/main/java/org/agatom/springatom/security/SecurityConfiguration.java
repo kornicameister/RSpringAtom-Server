@@ -2,14 +2,17 @@ package org.agatom.springatom.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.security.core.AuthenticationService;
-import org.agatom.springatom.security.filter.TokenAuthenticationFilter;
+import org.agatom.springatom.security.support.AjaxHttpFirewall;
+import org.agatom.springatom.security.support.TokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityAuthorizeMode;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
@@ -20,6 +23,7 @@ import org.springframework.security.web.header.HeaderWriterFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @Configuration
 @ComponentScan(
   basePackageClasses = SecurityConfiguration.class,
@@ -38,16 +42,13 @@ public class SecurityConfiguration
   private ObjectMapper          objectMapper;
   @Autowired
   private AuthenticationService authenticationService;
+  @Autowired
+  private AjaxHttpFirewall ajaxHttpFirewall;
 
-//  @Bean
-//  @Order(Ordered.HIGHEST_PRECEDENCE)
-//  public FilterRegistrationBean tokenAuthenticationFilterBean() {
-//    final FilterRegistrationBean rb = new FilterRegistrationBean();
-//    rb.setFilter(this.tokenAuthenticationFilter());
-//    rb.setEnabled(true);
-//    rb.setAsyncSupported(true);
-//    return rb;
-//  }
+  @Override
+  public void configure(final WebSecurity web) throws Exception {
+    web.httpFirewall(this.ajaxHttpFirewall);
+  }
 
   @Override
   protected void configure(final HttpSecurity http) throws Exception {
@@ -64,7 +65,7 @@ public class SecurityConfiguration
 
       http.exceptionHandling().authenticationEntryPoint(entryPoint);
       http.httpBasic().authenticationEntryPoint(entryPoint);
-      http.requestMatchers().antMatchers(paths);
+      http.authorizeRequests().antMatchers(paths).authenticated();
 
     }
   }

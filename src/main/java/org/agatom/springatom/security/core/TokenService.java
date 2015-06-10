@@ -21,6 +21,8 @@ public interface TokenService {
 
   Map<String, UserDetails> getValidUsers();
 
+  boolean isTokenExpired(final String token);
+
   class InvalidTokenException
     extends AuthenticationException {
     private static final long serialVersionUID = -6578462071390347376L;
@@ -31,6 +33,15 @@ public interface TokenService {
 
     public InvalidTokenException(final String token) {
       super(String.format("Token %s is invalid", token));
+    }
+  }
+
+  class TokenExpiredException
+    extends AuthenticationException {
+    private static final long serialVersionUID = -3473851935114808307L;
+
+    public TokenExpiredException(final String token) {
+      super(String.format("%s has expired", token));
     }
   }
 
