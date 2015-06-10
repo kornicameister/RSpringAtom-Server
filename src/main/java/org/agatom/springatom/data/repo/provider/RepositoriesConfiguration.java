@@ -1,4 +1,4 @@
-package org.agatom.springatom.data.repo.core.provider;
+package org.agatom.springatom.data.repo.provider;
 
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;

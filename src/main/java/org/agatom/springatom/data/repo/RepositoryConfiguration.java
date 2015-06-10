@@ -1,7 +1,5 @@
 package org.agatom.springatom.data.repo;
 
-import org.agatom.springatom.data.repo.core.factory.NRepositoriesFactoryBean;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -20,13 +18,12 @@ import org.springframework.stereotype.Repository;
 )
 @EnableJpaRepositories(
   basePackages = "org.agatom.springatom.data.repo.repositories",
-  considerNestedRepositories = true,
-  repositoryFactoryBeanClass = NRepositoriesFactoryBean.class
+  considerNestedRepositories = true
 )
 @EnableJpaAuditing(
   modifyOnCreate = true,
   setDates = true,
-  auditorAwareRef = "auditDomainService"
+  auditorAwareRef = "auditableDomainService"
 )
 public class RepositoryConfiguration {
 }

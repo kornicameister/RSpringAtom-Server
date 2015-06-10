@@ -23,7 +23,6 @@ import org.springframework.security.web.header.HeaderWriterFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @Configuration
 @ComponentScan(
   basePackageClasses = SecurityConfiguration.class,
@@ -31,84 +30,91 @@ import java.util.List;
 )
 @EnableWebSecurity
 @EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
-public class SecurityConfiguration
-  extends WebSecurityConfigurerAdapter {
-  @Autowired
-  private SSecurityProperties   sSecurity;
-  @Autowired
-  private SecurityProperties    security;
-  @Autowired
-  private ObjectMapper          objectMapper;
-  @Autowired
-  private AuthenticationService authenticationService;
-  @Autowired
-  private AjaxHttpFirewall ajaxHttpFirewall;
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfiguration {
 
-  @Override
-  public void configure(final WebSecurity web) throws Exception {
-    web.httpFirewall(this.ajaxHttpFirewall);
-  }
+  @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+  @Configuration
+  public static class RestWebSecurityConfigurationAdapter
+    extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private SSecurityProperties   sSecurity;
+    @Autowired
+    private SecurityProperties    security;
+    @Autowired
+    private ObjectMapper          objectMapper;
+    @Autowired
+    private AuthenticationService authenticationService;
+    @Autowired
+    private AjaxHttpFirewall      ajaxHttpFirewall;
 
-  @Override
-  protected void configure(final HttpSecurity http) throws Exception {
-    this.configurePaths(http);
-    this.configureAuthorizeMode(http);
-
-    http.addFilterAfter(this.tokenAuthenticationFilter(), HeaderWriterFilter.class);
-  }
-
-  private void configurePaths(final HttpSecurity http) throws Exception {
-    final String[] paths = this.getSecureApplicationPaths();
-    if (paths.length > 0) {
-      final AuthenticationEntryPoint entryPoint = this.entryPoint();
-
-      http.exceptionHandling().authenticationEntryPoint(entryPoint);
-      http.httpBasic().authenticationEntryPoint(entryPoint);
-      http.authorizeRequests().antMatchers(paths).authenticated();
-
+    @Override
+    public void configure(final WebSecurity web) throws Exception {
+      web.httpFirewall(this.ajaxHttpFirewall);
     }
-  }
 
-  private void configureAuthorizeMode(final HttpSecurity http) throws Exception {
-    final List<String> role = this.security.getUser().getRole();
-    final String[] roles = role.toArray(new String[role.size()]);
-    final SecurityAuthorizeMode mode = this.security.getBasic().getAuthorizeMode();
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
+      this.configurePaths(http);
+      this.configureAuthorizeMode(http);
 
-    if (mode == null || mode == SecurityAuthorizeMode.ROLE) {
-      http.authorizeRequests().anyRequest().hasAnyRole(roles);
-    } else if (mode == SecurityAuthorizeMode.AUTHENTICATED) {
-      http.authorizeRequests().anyRequest().authenticated();
+      http.addFilterAfter(this.tokenAuthenticationFilter(), HeaderWriterFilter.class);
     }
-  }
 
-  private TokenAuthenticationFilter tokenAuthenticationFilter() {
-    final TokenAuthenticationFilter filter = new TokenAuthenticationFilter();
+    private void configurePaths(final HttpSecurity http) throws Exception {
+      final String[] paths = this.getSecureApplicationPaths();
+      if (paths.length > 0) {
+        final AuthenticationEntryPoint entryPoint = this.entryPoint();
 
-    filter.setAuthenticationService(this.authenticationService)
-      .setObjectMapper(this.objectMapper);
-    this.sSecurity.configureTokenFilter(filter);
+        http.exceptionHandling().authenticationEntryPoint(entryPoint);
+        http.httpBasic().authenticationEntryPoint(entryPoint);
+        http.authorizeRequests().antMatchers(paths).authenticated();
 
-    return filter;
-  }
-
-  private String[] getSecureApplicationPaths() {
-    List<String> list = new ArrayList<String>();
-    for (String path : this.security.getBasic().getPath()) {
-      path = (path == null ? "" : path.trim());
-      if (path.equals("/**")) {
-        return new String[]{path};
-      }
-      if (!path.equals("")) {
-        list.add(path);
       }
     }
-    return list.toArray(new String[list.size()]);
+
+    private void configureAuthorizeMode(final HttpSecurity http) throws Exception {
+      final List<String> role = this.security.getUser().getRole();
+      final String[] roles = role.toArray(new String[role.size()]);
+      final SecurityAuthorizeMode mode = this.security.getBasic().getAuthorizeMode();
+
+      if (mode == null || mode == SecurityAuthorizeMode.ROLE) {
+        http.authorizeRequests().anyRequest().hasAnyRole(roles);
+      } else if (mode == SecurityAuthorizeMode.AUTHENTICATED) {
+        http.authorizeRequests().anyRequest().authenticated();
+      }
+    }
+
+    private TokenAuthenticationFilter tokenAuthenticationFilter() {
+      final TokenAuthenticationFilter filter = new TokenAuthenticationFilter();
+
+      filter.setAuthenticationService(this.authenticationService)
+        .setObjectMapper(this.objectMapper);
+      this.sSecurity.configureTokenFilter(filter);
+
+      return filter;
+    }
+
+    private String[] getSecureApplicationPaths() {
+      List<String> list = new ArrayList<String>();
+      for (String path : this.security.getBasic().getPath()) {
+        path = (path == null ? "" : path.trim());
+        if (path.equals("/**")) {
+          return new String[]{path};
+        }
+        if (!path.equals("")) {
+          list.add(path);
+        }
+      }
+      return list.toArray(new String[list.size()]);
+    }
+
+    private AuthenticationEntryPoint entryPoint() {
+      BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+      entryPoint.setRealmName(this.security.getBasic().getRealm());
+      return entryPoint;
+    }
+
   }
 
-  private AuthenticationEntryPoint entryPoint() {
-    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-    entryPoint.setRealmName(this.security.getBasic().getRealm());
-    return entryPoint;
-  }
 }

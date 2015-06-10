@@ -7,8 +7,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.data.repo.core.provider.RepositoriesHelper;
-import org.agatom.springatom.data.repo.repositories.NAuditableRepository;
+import org.agatom.springatom.data.model.NAbstractAuditable;
+import org.agatom.springatom.data.repo.provider.RepositoriesHelper;
+import org.agatom.springatom.data.service.services.NAuditableService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.history.Revision;
@@ -36,10 +37,13 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping(
   value = "/sa/revisions/"
 )
+@SuppressWarnings("unchecked")
 class RevisionController {
   @Autowired
-  private RepositoriesHelper      helper       = null;
-  private List<AuditableEndpoint> endpointList = null;
+  private RepositoriesHelper      helper           = null;
+  @Autowired
+  private NAuditableService       auditableService = null;
+  private List<AuditableEndpoint> endpointList     = null;
 
   @RequestMapping
   public ResponseEntity<List<AuditableEndpoint>> getAuditableEndpoints() {
@@ -52,9 +56,9 @@ class RevisionController {
                                   @PathVariable("entity") String entity) throws EndpointNotFound {
     final Optional<AuditableEndpoint> any = this.getEndpoint(entity);
     if (any.isPresent()) {
-      final NAuditableRepository repo = (NAuditableRepository) this.helper.getRepositoryFor(any.get().getDomainType());
+      final Class<NAbstractAuditable> domainType = (Class<NAbstractAuditable>) any.get().getDomainType();
       final List<RevisionResource> list = FluentIterable
-        .from(repo.findRevisions(id))
+        .from(this.auditableService.findRevisions(domainType, id))
         .transform(new Function<Object, RevisionResource>() {
           @Nullable
           @Override
@@ -74,8 +78,8 @@ class RevisionController {
                                   @PathVariable("entity") String entity) throws EndpointNotFound {
     final Optional<AuditableEndpoint> any = this.getEndpoint(entity);
     if (any.isPresent()) {
-      final NAuditableRepository repo = (NAuditableRepository) this.helper.getRepositoryFor(any.get().getDomainType());
-      return ResponseEntity.ok(this.toRevisionResource(repo.findInRevision(id, revision)));
+      final Class<NAbstractAuditable> domainType = (Class<NAbstractAuditable>) any.get().getDomainType();
+      return ResponseEntity.ok(this.toRevisionResource(this.auditableService.findInRevision(domainType, id, revision)));
     }
     throw new EndpointNotFound(String.format("%s is not associated with auditable endpoints", entity));
   }

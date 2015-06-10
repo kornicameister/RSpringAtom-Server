@@ -22,9 +22,9 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 @EnableConfigurationProperties
 @Import({
+  SecurityConfiguration.class,
   DataConfiguration.class,
-  MVCConfiguration.class,
-  SecurityConfiguration.class
+  MVCConfiguration.class
 })
 public class SpringAtomApplication {
   @Autowired

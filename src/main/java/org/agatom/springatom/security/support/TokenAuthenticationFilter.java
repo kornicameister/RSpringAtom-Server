@@ -50,6 +50,7 @@ public class TokenAuthenticationFilter
 
   @Override
   protected boolean shouldNotFilter(final HttpServletRequest request) throws ServletException {
+    final String requestURI = request.getRequestURI();
     return StringUtils.hasText((String) request.getAttribute(SKIP_FILTER));
   }
 
@@ -59,6 +60,7 @@ public class TokenAuthenticationFilter
                                   final HttpServletResponse response,
                                   final FilterChain filterChain) throws ServletException, IOException {
     LOGGER.entry();
+    // TODO check token for all requests apart from /authenticate, this one goes to check login
     final boolean tokenOk = this.checkToken(request, response);
 
     if (!this.shouldNotFilter(request)) {

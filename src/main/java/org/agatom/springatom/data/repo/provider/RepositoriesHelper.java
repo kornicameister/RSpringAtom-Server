@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.data.repo.core.provider;
+package org.agatom.springatom.data.repo.provider;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mapping.PersistentEntity;
