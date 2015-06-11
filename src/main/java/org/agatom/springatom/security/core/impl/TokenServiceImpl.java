@@ -5,7 +5,9 @@ import org.agatom.springatom.security.core.TokenFactory;
 import org.agatom.springatom.security.core.TokenService;
 import org.agatom.springatom.security.core.TokenStore;
 import org.agatom.springatom.security.token.TokenInfo;
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +20,8 @@ import java.util.function.Predicate;
 
 @Service
 class TokenServiceImpl
-  implements TokenService {
+    implements TokenService {
   private static final Logger LOGGER = LogManager.getLogger(TokenServiceImpl.class);
-  private static final Marker MARKER = MarkerManager.getMarker("TokenService");
   @Autowired
   private TokenStore   tokenStore;
   @Autowired
@@ -33,8 +34,8 @@ class TokenServiceImpl
 
     // issued_at and expires_at will be set in tokenStore
     final TokenInfo tokenInfo = new TokenInfo()
-      .setToken(token)
-      .setUserDetails(userDetails);
+        .setToken(token)
+        .setUserDetails(userDetails);
 
     this.removeUserDetails(userDetails);
 
@@ -70,7 +71,8 @@ class TokenServiceImpl
 
   @Override
   public UserDetails getUserDetails(final String token) {
-    return this.tokenStore.read(tr -> tr.getToken().equals(token)).getUserDetails();
+    final TokenInfo tokenInfo = this.tokenStore.read(tr -> tr.getToken().equals(token));
+    return tokenInfo != null ? tokenInfo.getUserDetails() : null;
   }
 
   @Override
@@ -92,6 +94,9 @@ class TokenServiceImpl
   @Override
   public boolean isTokenExpired(final String token) {
     final TokenInfo info = this.tokenStore.read(ti -> ti.getToken().equals(token));
+    if (info == null) {
+      return true;
+    }
     final DateTime expiresAt = info.getExpiresAt();
     final DateTime now = DateTime.now();
     return now.isAfter(expiresAt);

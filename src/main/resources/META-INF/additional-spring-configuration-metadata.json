@@ -1,39 +1,51 @@
 {
    "properties": [
       {
-         "name"       : "sa.boot.enabled",
+         "name": "sa.boot.enabled",
          "type": "java.lang.Boolean",
          "description": "Description for sa.boot.enabled."
       },
       {
-         "name"       : "sa.security.token.ttl",
-         "type"       : "java.lang.Integer",
+         "name": "sa.security.token.ttl",
+         "type": "java.lang.Integer",
          "description": "Description for sa.security.token.ttl."
       },
       {
-         "name"       : "sa.data.loader.enabled",
-         "type"       : "java.lang.Boolean",
+         "name": "sa.data.loader.enabled",
+         "type": "java.lang.Boolean",
          "description": "Description for sa.data.loader.enabled."
       },
       {
-         "name"       : "sa.security.token.initial_size",
-         "type"       : "java.lang.Integer",
+         "name": "sa.security.token.initial_size",
+         "type": "java.lang.Integer",
          "description": "Description for sa.security.token.initial_size."
       },
       {
-         "name"       : "sa.security.token.header_token",
-         "type"       : "java.lang.String",
+         "name": "sa.security.token.header_token",
+         "type": "java.lang.String",
          "description": "Description for sa.security.token.header_token."
       },
       {
-         "name"       : "sa.security.token.header_password",
-         "type"       : "java.lang.String",
+         "name": "sa.security.token.header_password",
+         "type": "java.lang.String",
          "description": "Description for sa.security.token.header_password."
       },
       {
-         "name"       : "sa.security.token.header_username",
-         "type"       : "java.lang.String",
+         "name": "sa.security.token.header_username",
+         "type": "java.lang.String",
          "description": "Description for sa.security.token.header_username."
+      },
+      {
+         "name": "sa.security.paths.login",
+         "type": "java.lang.String",
+         "description": "Description for sa.security.paths.login.",
+         "defaultValue": "/login"
+      },
+      {
+         "name": "sa.security.paths.processing",
+         "type": "java.lang.String",
+         "description": "Description for sa.security.paths.processing.",
+         "defaultValue": "/authenticate"
       }
    ]
 }

@@ -20,29 +20,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 class AuthenticationServiceImpl
-  implements AuthenticationService {
+    implements AuthenticationService {
   private static final Logger LOGGER = LogManager.getLogger(AuthenticationServiceImpl.class);
   @Autowired
-  private ApplicationContext    applicationContext;
-  @Autowired
-  private AuthenticationManager authenticationManager;
-  @Autowired
-  private TokenService          tokenManager;
+  private TokenService tokenManager;
 
   @Override
-  public TokenInfo authenticate(final String login, final String password) {
-    LOGGER.entry(login, password);
+  public TokenInfo generateToken(final Authentication authentication) {
+    LOGGER.entry(authentication);
     TokenInfo info = null;
     try {
-      final Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-
       if (authentication.getPrincipal() != null) {
         final UserDetails userContext = (UserDetails) authentication.getPrincipal();
         info = this.tokenManager.createNewToken(userContext);
       }
     } catch (Exception exp) {
-      LOGGER.error(MarkerManager.getMarker("Auth"), String.format("Failed to authenticate %s", login), exp);
+      LOGGER.error(MarkerManager.getMarker("Auth"), String.format("Failed to generateToken %s", authentication), exp);
     }
     LOGGER.exit(info);
     return info;
@@ -62,29 +55,14 @@ class AuthenticationServiceImpl
     }
 
     SecurityContextHolder
-      .getContext()
-      .setAuthentication(
-        new UsernamePasswordAuthenticationToken(
-          userDetails,
-          null,
-          userDetails.getAuthorities()
-        )
-      );
-  }
-
-  @Override
-  public void logout(final String token) {
-    this.tokenManager.removeToken(token);
-    SecurityContextHolder.clearContext();
-  }
-
-  @Override
-  public UserDetails currentUser() {
-    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null) {
-      return null;
-    }
-    return (UserDetails) authentication.getPrincipal();
+        .getContext()
+        .setAuthentication(
+            new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+            )
+        );
   }
 
 }

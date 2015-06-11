@@ -1,13 +1,17 @@
 package org.agatom.springatom.security;
 
+import com.google.common.collect.Lists;
 import org.agatom.springatom.security.support.TokenAuthenticationFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @ConfigurationProperties(prefix = "sa.security")
 public class SSecurityProperties {
   private Token token = new Token();
+  private Paths paths = new Paths();
 
   public Token getToken() {
     return token;
@@ -18,23 +22,41 @@ public class SSecurityProperties {
     return this;
   }
 
+  public SSecurityProperties setPaths(final Paths paths) {
+    this.paths = paths;
+    return this;
+  }
+
+  public Paths getPaths() {
+    return paths;
+  }
+
   public void configureTokenFilter(final TokenAuthenticationFilter filter) {
-    filter.setTokenHeaders(new TokenAuthenticationFilter.TokenHeaders() {
-      @Override
-      public String getHeaderToken() {
-        return token.getHeaderToken();
-      }
+    filter.setTokenHeaders(token::getHeaderToken);
+    filter.setTokenIgnoredPaths(() -> Lists.<String>newArrayList(paths.getLogin(), paths.getProcessing()));
+  }
 
-      @Override
-      public String getHeaderUsername() {
-        return token.getHeaderUsername();
-      }
+  public static class Paths {
+    private String login;
+    private String processing;
 
-      @Override
-      public String getHeaderPassword() {
-        return token.getHeaderPassword();
-      }
-    });
+    public Paths setLogin(final String login) {
+      this.login = login;
+      return this;
+    }
+
+    public Paths setProcessing(final String processing) {
+      this.processing = processing;
+      return this;
+    }
+
+    public String getLogin() {
+      return login;
+    }
+
+    public String getProcessing() {
+      return processing;
+    }
   }
 
   public static class Token {
