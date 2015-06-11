@@ -38,7 +38,7 @@ import java.util.List;
 )
 @EnableWebSecurity
 @EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, mode = AdviceMode.ASPECTJ)
+@EnableGlobalMethodSecurity(securedEnabled = false, mode = AdviceMode.ASPECTJ)
 public class SecurityConfiguration {
   private static final Logger LOGGER = LogManager.getLogger(SecurityConfiguration.class);
 
