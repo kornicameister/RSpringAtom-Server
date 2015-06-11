@@ -1,0 +1,35 @@
+{
+   "users": [
+      {
+         "login"   : "SYSTEM",
+         "password": "SYSTEM",
+         "email"   : "system@springatom.com",
+         "roles"   : [
+            "ROLE_ADMIN"
+         ]
+      },
+      {
+         "login"   : "kornicameister",
+         "password": "342qtconfig12",
+         "email"   : "kornicameister@gmail.com",
+         "roles"   : [
+            "ROLE_BOSS",
+            "ROLE_MECHANIC"
+         ],
+         "person"  : {
+            "firstName": "Tomasz",
+            "lastName" : "Trębski",
+            "contacts" : [
+               {
+                  "value": "tomasz.trebski@gmail.com",
+                  "type" : "SCT_MAIL"
+               },
+               {
+                  "value": "789-231-312",
+                  "type" : "SCT_CELL_PHONE"
+               }
+            ]
+         }
+      }
+   ]
+}

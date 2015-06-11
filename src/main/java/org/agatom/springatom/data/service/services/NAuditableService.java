@@ -2,14 +2,15 @@ package org.agatom.springatom.data.service.services;
 
 
 import org.agatom.springatom.data.model.NAbstractAuditable;
+import org.agatom.springatom.data.model.user.NUser;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
 
 public interface NAuditableService
-  extends AuditorAware<String> {
+  extends AuditorAware<NUser> {
 
-  <T extends NAbstractAuditable> Revisions<Long, T> findRevisions(final Class<T> clazz, final Long id);
+  <T extends NAbstractAuditable> Revisions<Integer, T> findRevisions(final Class<T> clazz, final Long id);
 
   /**
    * {@code findInRevision} returns {@link org.springframework.data.history.Revision} of the target underlying target entity in the given revision
@@ -21,9 +22,9 @@ public interface NAuditableService
    *
    * @return {@link org.springframework.data.history.Revision} for passed arguments
    *
-   * @see NAuditableService#findInRevisions(Class, Long, Long...)
+   * @see NAuditableService#findInRevisions(Class, Long, Integer...)
    */
-  <T extends NAbstractAuditable> Revision<Long, T> findInRevision(final Class<T> clazz, final Long id, final Long revision);
+  <T extends NAbstractAuditable> Revision<Integer, T> findInRevision(final Class<T> clazz, final Long id, final Integer revision);
 
   /**
    * {@code findInRevisions} does exactly the same job but for multiple possible {@code revisions}.
@@ -34,7 +35,7 @@ public interface NAuditableService
    *
    * @return {@link org.springframework.data.history.Revisions}
    */
-  <T extends NAbstractAuditable> Revisions<Long, T> findInRevisions(final Class<T> clazz, final Long id, final Long... revisions);
+  <T extends NAbstractAuditable> Revisions<Integer, T> findInRevisions(final Class<T> clazz, final Long id, final Integer... revisions);
 
   /**
    * Returns how many revisions exists for given {@link org.springframework.data.domain.Persistable#getId()} instance

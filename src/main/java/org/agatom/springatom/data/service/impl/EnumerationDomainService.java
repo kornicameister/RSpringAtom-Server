@@ -18,7 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Set;
 
@@ -30,40 +31,6 @@ class EnumerationDomainService
   private              ObjectMapper                objectMapper          = null;
   @Autowired
   private              NEnumerationRepository      enumerationRepository = null;
-
-
-  @Override
-  public NEnumeration newEnumeration(final String name, final File file) throws EnumerationServiceException {
-    final BufferedInputStream stream;
-    try {
-      stream = new BufferedInputStream(new FileInputStream(file));
-    } catch (FileNotFoundException exp) {
-      throw new EnumerationServiceException(exp);
-    }
-    return this.newEnumeration(name, stream);
-  }
-
-  @Override
-  public NEnumeration newEnumeration(final String name, final InputStream stream) throws EnumerationServiceException {
-    try {
-      final Object object = this.objectMapper.readTree(new BufferedInputStream(stream));
-      Assert.isInstanceOf(Collection.class, object);
-    } catch (Exception exp) {
-      throw new EnumerationServiceException(exp);
-    }
-    return null;
-  }
-
-  @Override
-  public Iterable<NEnumeration> newEnumerations(final File file) throws EnumerationServiceException {
-    final BufferedInputStream stream;
-    try {
-      stream = new BufferedInputStream(new FileInputStream(file));
-    } catch (FileNotFoundException exp) {
-      throw new EnumerationServiceException(exp);
-    }
-    return this.newEnumerations(stream);
-  }
 
   @Override
   public Iterable<NEnumeration> newEnumerations(final InputStream stream) throws EnumerationServiceException {
@@ -95,17 +62,26 @@ class EnumerationDomainService
   }
 
   @Override
+  public NEnumeration getEnumeration(final String name) throws EnumerationServiceException {
+    NEnumeration value;
+    try {
+      final java.util.Optional<NEnumeration> byName = this.enumerationRepository.findByName(name);
+      value = byName.isPresent() ? byName.get() : null;
+      Assert.notNull(value);
+    } catch (IllegalArgumentException exp) {
+      throw EnumerationServiceException.enumerationNotFound(name);
+    } catch (Exception exp) {
+      throw new EnumerationServiceException(exp);
+    }
+    return value;
+  }
+
+  @Override
   public NEnumeration newEnumeration(final String name, final Collection<NEnumerationEntry> entries) {
     final NEnumeration enumeration = new NEnumeration()
       .setName(name)
       .setEntries(Lists.newArrayList(entries));
     return this.enumerationRepository.save(enumeration);
-  }
-
-  @Override
-  public String getEnumeratedValue(final String name, final String entryKey) throws EnumerationServiceException {
-    final NEnumerationEntry entry = this.getEnumerationEntry(name, entryKey);
-    return entry != null ? entry.getKey() : null;
   }
 
   @Override
@@ -128,17 +104,8 @@ class EnumerationDomainService
   }
 
   @Override
-  public NEnumeration getEnumeration(final String name) throws EnumerationServiceException {
-    NEnumeration value;
-    try {
-      final java.util.Optional<NEnumeration> byName = this.enumerationRepository.findByName(name);
-      value = byName.isPresent() ? byName.get() : null;
-      Assert.notNull(value);
-    } catch (IllegalArgumentException exp) {
-      throw EnumerationServiceException.enumerationNotFound(name);
-    } catch (Exception exp) {
-      throw new EnumerationServiceException(exp);
-    }
-    return value;
+  public String getEnumeratedValue(final String name, final String entryKey) throws EnumerationServiceException {
+    final NEnumerationEntry entry = this.getEnumerationEntry(name, entryKey);
+    return entry != null ? entry.getKey() : null;
   }
 }

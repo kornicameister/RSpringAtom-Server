@@ -57,29 +57,46 @@ class RevisionController {
     final Optional<AuditableEndpoint> any = this.getEndpoint(entity);
     if (any.isPresent()) {
       final Class<NAbstractAuditable> domainType = (Class<NAbstractAuditable>) any.get().getDomainType();
-      final List<RevisionResource> list = FluentIterable
+      final Collection<RevisionResource> list = FluentIterable
         .from(this.auditableService.findRevisions(domainType, id))
-        .transform(new Function<Object, RevisionResource>() {
+        .transform(new Function<Revision<?, ?>, RevisionResource>() {
           @Nullable
           @Override
-          public RevisionResource apply(final Object input) {
-            return toRevisionResource((Revision<?, ?>) input);
+          public RevisionResource apply(final Revision<?, ?> input) {
+            final RevisionResource resource = toRevisionResource(input);
+
+            try {
+              final String revAsString = input.getRevisionNumber().toString();
+              resource.add(linkTo(methodOn(RevisionController.class).getOne(id, Integer.valueOf(revAsString), entity)).withRel(revAsString));
+            } catch (EndpointNotFound ignore) {
+            }
+
+            return resource;
           }
         })
         .toList();
-      return ResponseEntity.ok(list);
+
+      final RevisionsResource resource = new RevisionsResource().setResource(list);
+      resource.add(linkTo(methodOn(RevisionController.class).getAll(id, entity)).withSelfRel());
+
+      return ResponseEntity.ok(resource);
     }
     throw new EndpointNotFound(String.format("%s is not associated with auditable endpoints", entity));
   }
 
   @RequestMapping(value = "{entity}/{id}/{revision}")
   public ResponseEntity<?> getOne(@PathVariable("id") final Long id,
-                                  @PathVariable("revision") final Long revision,
+                                  @PathVariable("revision") final Integer revision,
                                   @PathVariable("entity") String entity) throws EndpointNotFound {
     final Optional<AuditableEndpoint> any = this.getEndpoint(entity);
     if (any.isPresent()) {
       final Class<NAbstractAuditable> domainType = (Class<NAbstractAuditable>) any.get().getDomainType();
-      return ResponseEntity.ok(this.toRevisionResource(this.auditableService.findInRevision(domainType, id, revision)));
+      final RevisionResource resource = this.toRevisionResource(this.auditableService.findInRevision(domainType, id, revision));
+
+      resource.add(linkTo(methodOn(RevisionController.class).getOne(id, revision, entity)).withSelfRel());
+      resource.add(linkTo(methodOn(RevisionController.class).getAll(id, entity)).withRel("all"));
+
+      return ResponseEntity.ok(resource);
     }
     throw new EndpointNotFound(String.format("%s is not associated with auditable endpoints", entity));
   }
@@ -127,6 +144,20 @@ class RevisionController {
 
     public EndpointNotFound(final String msg) {
       super(msg);
+    }
+  }
+
+  private static class RevisionsResource
+    extends ResourceSupport {
+    private Collection<RevisionResource> resource = null;
+
+    public Collection<RevisionResource> getResource() {
+      return resource;
+    }
+
+    public RevisionsResource setResource(final Collection<RevisionResource> resource) {
+      this.resource = resource;
+      return this;
     }
   }
 

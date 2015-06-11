@@ -3,6 +3,7 @@ package org.agatom.springatom.data.service.services;
 
 import org.agatom.springatom.data.model.enumeration.NEnumeration;
 import org.agatom.springatom.data.model.enumeration.NEnumerationEntry;
+import org.agatom.springatom.data.service.core.NDataLoaderService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
@@ -10,12 +11,22 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 
-public interface NEnumerationService {
+public interface NEnumerationService
+  extends NDataLoaderService<Iterable<NEnumeration>> {
   String CACHE_NAME = "enumerations";
+
+  @Override
+  default Iterable<NEnumeration> loadData(final InputStream stream) throws EnumerationServiceException {
+    return this.newEnumerations(stream);
+  }
+
+  @NotNull
+  @CacheEvict(value = CACHE_NAME, allEntries = true, beforeInvocation = false)
+  @Transactional(rollbackFor = EnumerationServiceException.class)
+  Iterable<NEnumeration> newEnumerations(@NotNull final InputStream stream) throws EnumerationServiceException;
 
   @CacheEvict(value = CACHE_NAME, allEntries = true, beforeInvocation = false)
   @Transactional(rollbackFor = EnumerationServiceException.class)
@@ -23,25 +34,7 @@ public interface NEnumerationService {
 
   @CacheEvict(value = CACHE_NAME, allEntries = true, beforeInvocation = false)
   @Transactional(rollbackFor = EnumerationServiceException.class)
-  NEnumeration newEnumeration(final String name, final File file) throws EnumerationServiceException;
-
-  @CacheEvict(value = CACHE_NAME, allEntries = true, beforeInvocation = false)
-  @Transactional(rollbackFor = EnumerationServiceException.class)
-  NEnumeration newEnumeration(final String name, final InputStream stream) throws EnumerationServiceException;
-
-  @CacheEvict(value = CACHE_NAME, allEntries = true, beforeInvocation = false)
-  @Transactional(rollbackFor = EnumerationServiceException.class)
   NEnumeration newEnumeration(final String name, final Collection<NEnumerationEntry> entries) throws EnumerationServiceException;
-
-  @NotNull
-  @CacheEvict(value = CACHE_NAME, allEntries = true, beforeInvocation = false)
-  @Transactional(rollbackFor = EnumerationServiceException.class)
-  Iterable<NEnumeration> newEnumerations(@NotNull final File stream) throws EnumerationServiceException;
-
-  @NotNull
-  @CacheEvict(value = CACHE_NAME, allEntries = true, beforeInvocation = false)
-  @Transactional(rollbackFor = EnumerationServiceException.class)
-  Iterable<NEnumeration> newEnumerations(@NotNull final InputStream stream) throws EnumerationServiceException;
 
   @Cacheable(value = CACHE_NAME)
   @Transactional(readOnly = true, rollbackFor = EnumerationServiceException.class, isolation = Isolation.READ_COMMITTED)
