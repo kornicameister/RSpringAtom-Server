@@ -6,12 +6,14 @@ import org.agatom.springatom.mvc.MVCConfiguration;
 import org.agatom.springatom.security.SecurityConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -19,7 +21,7 @@ import javax.annotation.PostConstruct;
 
 @EnableAsync
 @EnableCaching
-@SpringBootApplication
+@EnableAutoConfiguration
 @EnableConfigurationProperties
 @Import({
   SecurityConfiguration.class,

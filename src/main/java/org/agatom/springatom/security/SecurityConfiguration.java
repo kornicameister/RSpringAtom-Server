@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityAuthorizeMode;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -25,7 +25,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +38,7 @@ import java.util.List;
 )
 @EnableWebSecurity
 @EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = false)
+@EnableGlobalMethodSecurity(securedEnabled = true, mode = AdviceMode.ASPECTJ)
 public class SecurityConfiguration {
   private static final Logger LOGGER = LogManager.getLogger(SecurityConfiguration.class);
 
@@ -58,7 +57,7 @@ public class SecurityConfiguration {
     private TokenService          tokenManager;
 
     @Bean
-    public FilterRegistrationBean tokenAuthenticationFilter(){
+    public FilterRegistrationBean tokenAuthenticationFilter() {
       final FilterRegistrationBean frb = new FilterRegistrationBean(
           this.getTokenAuthenticationFilter()
       );
@@ -69,6 +68,29 @@ public class SecurityConfiguration {
       frb.setName("tokenAuthenticationFilter");
 
       return frb;
+    }
+
+    private TokenAuthenticationFilter getTokenAuthenticationFilter() {
+      final TokenAuthenticationFilter filter = new TokenAuthenticationFilter();
+
+      filter.setAuthenticationService(this.authenticationService);
+      this.sSecurity.configureTokenFilter(filter);
+
+      return filter;
+    }
+
+    private String[] getSecureApplicationPaths() {
+      final List<String> list = Lists.newArrayList();
+      for (String path : this.security.getBasic().getPath()) {
+        path = (path == null ? "" : path.trim());
+        if (path.equals("/**")) {
+          return new String[]{path};
+        }
+        if (!path.equals("")) {
+          list.add(path);
+        }
+      }
+      return list.toArray(new String[list.size()]);
     }
 
     @Override
@@ -139,33 +161,10 @@ public class SecurityConfiguration {
       http.csrf().disable();
     }
 
-    private String[] getSecureApplicationPaths() {
-      final List<String> list = Lists.newArrayList();
-      for (String path : this.security.getBasic().getPath()) {
-        path = (path == null ? "" : path.trim());
-        if (path.equals("/**")) {
-          return new String[]{path};
-        }
-        if (!path.equals("")) {
-          list.add(path);
-        }
-      }
-      return list.toArray(new String[list.size()]);
-    }
-
     private AuthenticationEntryPoint entryPoint() {
       BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
       entryPoint.setRealmName(this.security.getBasic().getRealm());
       return entryPoint;
-    }
-
-    private TokenAuthenticationFilter getTokenAuthenticationFilter() {
-      final TokenAuthenticationFilter filter = new TokenAuthenticationFilter();
-
-      filter.setAuthenticationService(this.authenticationService);
-      this.sSecurity.configureTokenFilter(filter);
-
-      return filter;
     }
 
   }
