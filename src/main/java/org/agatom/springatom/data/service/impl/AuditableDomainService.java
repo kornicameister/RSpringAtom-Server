@@ -6,8 +6,8 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.data.model.NAbstractAuditable;
 import org.agatom.springatom.data.model.revision.AuditedRevisionEntity;
 import org.agatom.springatom.data.model.user.NUser;
-import org.agatom.springatom.data.repo.repositories.user.NUserRepository;
 import org.agatom.springatom.data.service.services.NAuditableService;
+import org.agatom.springatom.data.service.support.NUserDetails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.envers.*;
@@ -34,8 +34,6 @@ class AuditableDomainService
   @Autowired
   @SuppressWarnings("SpringJavaAutowiringInspection")
   private EntityManager   entityManager;
-  @Autowired
-  private NUserRepository userRepository;
 
   @Override
   public <T extends NAbstractAuditable> Revisions<Integer, T> findRevisions(final Class<T> clazz, final Long id) {
@@ -134,28 +132,21 @@ class AuditableDomainService
       LOGGER.debug("No user is currently authenticated");
       LOGGER.trace(exp.getMessage());
     }
-    if (user == null) {
-      try {
-        user = this.getAdministrator();
-      } catch (Exception exp) {
-        LOGGER.debug("Administrator has not been loaded so far, most like boot.load.data operation");
-        LOGGER.trace(exp.getMessage());
-      }
-    }
     return (user != null && user.isPresent()) ? user.get() : null;
   }
 
   protected Optional<NUser> getAuthenticatedUser() {
     final Optional<Authentication> authentication = Optional.ofNullable((Authentication) this.getAuthenticatedPrincipal());
-    return authentication.isPresent() ? this.userRepository.findByCredentialsUsername(authentication.get().getName()) : null;
-  }
-
-  protected Optional<NUser> getAdministrator() {
-    return this.userRepository.findByCredentialsUsername("SYSTEM");
+    return authentication.isPresent() ? this.retrieveUser(authentication.get().getPrincipal()) : null;
   }
 
   protected Principal getAuthenticatedPrincipal() {
     return SecurityContextHolder.getContext().getAuthentication();
+  }
+
+  private Optional<NUser> retrieveUser(final Object principal) {
+    final NUserDetails userDetails = (NUserDetails) principal;
+    return Optional.of(userDetails.getUser());
   }
 
 }

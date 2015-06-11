@@ -13,6 +13,7 @@ import org.agatom.springatom.data.service.services.NAuditableService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.history.Revision;
+import org.springframework.data.history.RevisionMetadata;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
@@ -102,9 +103,7 @@ class RevisionController {
   }
 
   private RevisionResource toRevisionResource(final Revision<?, ?> rev) {
-    return new RevisionResource()
-      .setRevisionDate(rev.getRevisionDate())
-      .setRevisionNumber(rev.getRevisionNumber());
+    return new RevisionResource(rev);
   }
 
   private Optional<AuditableEndpoint> getEndpoint(final String entity) {
@@ -163,25 +162,27 @@ class RevisionController {
 
   private static class RevisionResource
     extends ResourceSupport {
-    private DateTime revisionDate   = null;
-    private Number   revisionNumber = null;
+    @JsonIgnore
+    private final Revision<?, ?> rev;
 
-    public Number getRevisionNumber() {
-      return revisionNumber;
+    public RevisionResource(final Revision<?, ?> rev) {
+      this.rev = rev;
     }
 
-    public RevisionResource setRevisionNumber(final Number revisionNumber) {
-      this.revisionNumber = revisionNumber;
-      return this;
+    public Number getRevisionNumber() {
+      return rev.getRevisionNumber();
+    }
+
+    public RevisionMetadata<?> getMetadata() {
+      return rev.getMetadata();
     }
 
     public DateTime getRevisionDate() {
-      return revisionDate;
+      return rev.getRevisionDate();
     }
 
-    public RevisionResource setRevisionDate(final DateTime revisionDate) {
-      this.revisionDate = revisionDate;
-      return this;
+    public Object getEntity() {
+      return rev.getEntity();
     }
   }
 

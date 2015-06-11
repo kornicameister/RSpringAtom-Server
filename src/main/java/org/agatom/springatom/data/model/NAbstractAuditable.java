@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.agatom.springatom.data.model.user.NUser;
 import org.agatom.springatom.data.types.NAuditable;
 import org.springframework.data.jpa.domain.AbstractAuditable;
@@ -47,6 +48,7 @@ abstract public class NAbstractAuditable
   private              Long version          = null;
 
   @Override
+  @JsonIgnore
   public String getIdentity() {
     return String.format("%s.%s", this.getId(), this.getVersion());
   }
