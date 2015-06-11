@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.RevisionMetadata;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
@@ -41,10 +42,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @SuppressWarnings("unchecked")
 class RevisionController {
   @Autowired
-  private RepositoriesHelper      helper           = null;
+  private RepositoriesHelper      helper                = null;
   @Autowired
-  private NAuditableService       auditableService = null;
-  private List<AuditableEndpoint> endpointList     = null;
+  private NAuditableService       auditableService      = null;
+  @Autowired
+  private RepositoryEntityLinks   repositoryEntityLinks = null;
+  private List<AuditableEndpoint> endpointList          = null;
 
   @RequestMapping
   public ResponseEntity<List<AuditableEndpoint>> getAuditableEndpoints() {
@@ -69,6 +72,8 @@ class RevisionController {
             try {
               final String revAsString = input.getRevisionNumber().toString();
               resource.add(linkTo(methodOn(RevisionController.class).getOne(id, Integer.valueOf(revAsString), entity)).withRel(revAsString));
+              resource.add(repositoryEntityLinks.linkForSingleResource(domainType, id).withRel("entity"));
+              resource.add(repositoryEntityLinks.linkToCollectionResource(domainType).withRel("entities"));
             } catch (EndpointNotFound ignore) {
             }
 
@@ -96,6 +101,8 @@ class RevisionController {
 
       resource.add(linkTo(methodOn(RevisionController.class).getOne(id, revision, entity)).withSelfRel());
       resource.add(linkTo(methodOn(RevisionController.class).getAll(id, entity)).withRel("all"));
+      resource.add(this.repositoryEntityLinks.linkForSingleResource(domainType, id).withRel("entity"));
+      resource.add(this.repositoryEntityLinks.linkToCollectionResource(domainType).withRel("entities"));
 
       return ResponseEntity.ok(resource);
     }
@@ -179,10 +186,6 @@ class RevisionController {
 
     public DateTime getRevisionDate() {
       return rev.getRevisionDate();
-    }
-
-    public Object getEntity() {
-      return rev.getEntity();
     }
   }
 
