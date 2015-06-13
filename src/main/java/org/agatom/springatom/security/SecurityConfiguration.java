@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityAuthorizeMode;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
-import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +44,7 @@ import java.util.List;
 )
 @EnableWebSecurity
 @EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(securedEnabled = false, mode = AdviceMode.ASPECTJ)
+@EnableGlobalMethodSecurity
 public class SecurityConfiguration {
   private static final Logger LOGGER                    = LogManager.getLogger(SecurityConfiguration.class);
   private static final int    PASSWORD_ENCODER_STRENGTH = 10;

@@ -61,4 +61,10 @@ abstract public class NAbstractAuditable
   public void setVersion(@Nonnull @Min(value = 0) final Long version) {
     this.version = version;
   }
+
+  @Override
+  @JsonIgnore
+  public boolean isNew() {
+    return super.isNew();
+  }
 }

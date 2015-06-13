@@ -47,6 +47,7 @@ class UserDomainService
   implements NUserService {
   private static final Logger                      LOGGER                     = LogManager.getLogger(UserDomainService.class);
   @Autowired
+  @SuppressWarnings("SpringJavaAutowiringInspection")
   private              ObjectMapper                objectMapper               = null;
   @Autowired
   private              NEnumerationService         enumerationService         = null;
@@ -203,6 +204,25 @@ class UserDomainService
     }
 
     return user;
+  }
+
+  @Override
+  public Iterable<NUser> registerNewUsers(final Collection<UserRegistrationBean> beans) {
+    return FluentIterable.from(beans)
+      .transform(new Function<UserRegistrationBean, NUser>() {
+        @Nullable
+        @Override
+        public NUser apply(@Nullable final UserRegistrationBean urb) {
+          try {
+            assert urb != null;
+            return registerNewUser(urb.getUser(), urb.getPerson(), urb.getAuthorities());
+          } catch (Exception ex) {
+            LOGGER.error(String.format("Failed to register user out of bean %s urb", urb), ex);
+          }
+          return null;
+        }
+      })
+      .toList();
   }
 
   private NPerson getOrCreatePerson(final NPerson person) throws Exception {

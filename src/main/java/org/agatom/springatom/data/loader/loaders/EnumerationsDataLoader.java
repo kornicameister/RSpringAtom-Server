@@ -6,7 +6,6 @@ import org.agatom.springatom.data.service.services.NEnumerationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 
 import java.io.InputStream;
 
@@ -19,7 +18,6 @@ import java.io.InputStream;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Order(0)
 @DataLoader
 class EnumerationsDataLoader
         extends AbstractDataLoaderService {

@@ -1,7 +1,6 @@
 package org.agatom.springatom.data.loader;
 
 import com.google.common.base.Stopwatch;
-import org.agatom.springatom.data.loader.event.PostDataLoadEvent;
 import org.agatom.springatom.data.loader.event.PreDataLoadEvent;
 import org.agatom.springatom.data.loader.mgr.DataLoaderManager;
 import org.agatom.springatom.data.loader.srv.DataLoaderService;
@@ -14,18 +13,22 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static org.springframework.util.ClassUtils.getShortName;
+import static org.springframework.util.ClassUtils.getUserClass;
+import static org.springframework.util.StringUtils.uncapitalize;
 
 
 class ActiveLoaderManager
   implements DataLoaderManager, ApplicationEventPublisherAware {
   private static final Logger                         LOGGER                    = LoggerFactory.getLogger(ActiveLoaderManager.class);
   @Autowired
-  private              Map<String, DataLoaderService> loaderServiceMap          = null;
+  private              List<DataLoaderService>        loaderServiceMap          = null;
   @Autowired
   private              PlatformTransactionManager     transactionManager        = null;
   @Autowired
@@ -40,9 +43,10 @@ class ActiveLoaderManager
         LOGGER.debug(String.format("Loading data out of %d DataLoaderServices", this.loaderServiceMap.size()));
       }
 
+      Collections.sort(this.loaderServiceMap);
+
       this.loaderServiceMap
-        .keySet()
-        .forEach(key -> {
+        .forEach(service -> {
 
           LocalMarker marker = null;
           final DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
@@ -53,8 +57,8 @@ class ActiveLoaderManager
 
           try {
 
-            this.publishPreEvent(key);
-            marker = this.executeLoader(key);
+            this.publishPreEvent(service);
+            marker = this.executeLoader(service);
             if (marker.getError() == null) {
               this.transactionManager.commit(transaction);
               transaction = null;
@@ -67,10 +71,10 @@ class ActiveLoaderManager
               throw marker.getError();
             }
 
-            this.publishPostEvent(key);
+            this.publishPostEvent(service);
 
           } catch (Throwable exp) {
-            LOGGER.error(String.format("Failed to load data for loader=%s", key), exp);
+            LOGGER.error(String.format("Failed to load data for loader=%s", service), exp);
           } finally {
             if (transaction != null) {
               this.transactionManager.rollback(transaction);
@@ -86,32 +90,32 @@ class ActiveLoaderManager
     }
   }
 
-  private void publishPreEvent(final String key) {
+  private void publishPreEvent(final DataLoaderService service) {
     if (this.eventPublisher != null) {
+      final String key = uncapitalize(getShortName(getUserClass(service)));
       this.eventPublisher.publishEvent(new PreDataLoadEvent(key, this));
     }
   }
 
-  private LocalMarker executeLoader(final String key) throws Exception {
+  private LocalMarker executeLoader(final DataLoaderService service) throws Exception {
     if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(String.format("Loading data from %s", key));
+      LOGGER.debug(String.format("Loading data from %s", service));
     }
-    final Stopwatch stopwatch = Stopwatch.createStarted();
 
-    final DataLoaderService service = this.loaderServiceMap.get(key);
+    final Stopwatch stopwatch = Stopwatch.createStarted();
     final DataLoaderService.InstallationMarker marker = service.loadData();
 
-
     if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(String.format("Loaded data from %s in %d ms", key, stopwatch.stop().elapsed(TimeUnit.MILLISECONDS)));
+      LOGGER.debug(String.format("Loaded data from %s in %d ms", service, stopwatch.stop().elapsed(TimeUnit.MILLISECONDS)));
     }
 
-    return new LocalMarker(marker, ClassUtils.getUserClass(service));
+    return new LocalMarker(marker, getUserClass(service));
   }
 
-  private void publishPostEvent(final String key) {
+  private void publishPostEvent(final DataLoaderService service) {
     if (this.eventPublisher != null) {
-      this.eventPublisher.publishEvent(new PostDataLoadEvent(key, this));
+      final String key = uncapitalize(getShortName(getUserClass(service)));
+      this.eventPublisher.publishEvent(new PreDataLoadEvent(key, this));
     }
   }
 

@@ -11,7 +11,6 @@ import org.agatom.springatom.data.repo.repositories.authority.NRoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 
 import java.io.InputStream;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Order(1)
 @DataLoader
 class RolesDataLoader
   extends AbstractDataLoaderService {
@@ -76,4 +74,8 @@ class RolesDataLoader
     return roleSet;
   }
 
+  @Override
+  public int getOrder() {
+    return 1;
+  }
 }

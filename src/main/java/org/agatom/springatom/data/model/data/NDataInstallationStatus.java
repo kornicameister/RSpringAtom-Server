@@ -2,7 +2,6 @@ package org.agatom.springatom.data.model.data;
 
 import org.agatom.springatom.data.model.NAbstractPersistable;
 import org.agatom.springatom.data.types.data.DataInstallationStatus;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.util.SerializationUtils;
@@ -47,13 +46,6 @@ public class NDataInstallationStatus
   @Basic(fetch = FetchType.LAZY, optional = true)
   @Column(name = "i_failure", nullable = true)
   private              byte[]        installationFailure     = null;
-  @Formula(value = "UNIX_TIMESTAMP(i_ts)")
-  private              Long          installationTimestampTs = null;
-
-  @Override
-  public Long getInstallationTimestampTs() {
-    return this.installationTimestampTs;
-  }
 
   @Override
   public Long getInstallationHash() {

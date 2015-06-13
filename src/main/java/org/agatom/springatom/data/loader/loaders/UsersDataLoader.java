@@ -6,7 +6,6 @@ import org.agatom.springatom.data.service.services.NUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 
 import java.util.Objects;
 
@@ -19,7 +18,6 @@ import java.util.Objects;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Order(2)
 @DataLoader
 class UsersDataLoader
   extends AbstractDataLoaderService {
@@ -41,5 +39,10 @@ class UsersDataLoader
     }
 
     return marker;
+  }
+
+  @Override
+  public int getOrder() {
+    return 2;
   }
 }

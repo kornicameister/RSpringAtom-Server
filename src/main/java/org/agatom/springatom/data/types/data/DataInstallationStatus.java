@@ -12,8 +12,6 @@ import org.joda.time.DateTime;
  * @since 0.0.1
  */
 public interface DataInstallationStatus {
-    Long getInstallationTimestampTs();
-
     Long getInstallationHash();
 
     Class<?> getInstallationHandler();

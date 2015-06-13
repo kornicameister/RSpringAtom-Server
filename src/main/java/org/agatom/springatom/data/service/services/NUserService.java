@@ -69,4 +69,13 @@ public interface NUserService
   @NotNull
   <GA extends GrantedAuthority> NUser registerNewUser(@ValidUser final NUser user, final NPerson person, final Collection<GA> authorities) throws Exception;
 
+  Iterable<NUser> registerNewUsers(final Collection<UserRegistrationBean> beans);
+
+  interface UserRegistrationBean {
+    NUser getUser();
+
+    NPerson getPerson();
+
+    <GA extends GrantedAuthority> Collection<GA> getAuthorities();
+  }
 }

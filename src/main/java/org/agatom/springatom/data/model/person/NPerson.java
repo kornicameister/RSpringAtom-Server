@@ -1,22 +1,23 @@
 /**************************************************************************************************
  * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
- *                                                                                                *
+ * *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
  * the Free Software Foundation, either version 3 of the License, or                              *
  * (at your option) any later version.                                                            *
- *                                                                                                *
+ * *
  * [SpringAtom] is distributed in the hope that it will be useful,                                *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
  * GNU General Public License for more details.                                                   *
- *                                                                                                *
+ * *
  * You should have received a copy of the GNU General Public License                              *
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
 package org.agatom.springatom.data.model.person;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.data.model.NAbstractPersistable;
@@ -33,6 +34,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -46,14 +48,14 @@ import java.util.Set;
 
 @Entity
 @Table(
-        indexes = {
-                @Index(name = "p_last_name", columnList = "lastName")
-        }
+  indexes = {
+    @Index(name = "p_last_name", columnList = "lastName")
+  }
 )
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class NPerson
-        extends NAbstractPersistable
-        implements Person, MultiContactable<NPersonContact, NPerson> {
+  extends NAbstractPersistable
+  implements Person, MultiContactable<NPersonContact, NPerson> {
   private static final long serialVersionUID = -8306142304138446067L;
   @NotEmpty
   @Length(min = 3, max = 45)
@@ -63,9 +65,14 @@ public class NPerson
   @Length(min = 3, max = 45)
   @Column(length = 45, nullable = false)
   private String               lastName;
+  @JsonProperty("contacts")
   @BatchSize(size = 10)
   @OnDelete(action = OnDeleteAction.CASCADE)
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "assignee")
+  @OneToMany(fetch = FetchType.LAZY, cascade = {
+    CascadeType.REMOVE,
+    CascadeType.MERGE,
+    CascadeType.PERSIST
+  }, mappedBy = "assignee")
   private List<NPersonContact> contacts;
 
   @Override
@@ -101,15 +108,7 @@ public class NPerson
   /** {@inheritDoc} */
   @Override
   public List<NPersonContact> getContacts() {
-    if (this.contacts == null) {
-      this.contacts = Lists.newArrayListWithCapacity(10);
-    }
     return this.contacts;
-  }
-
-  @Override
-  public String getName() {
-    return this.getLastName();
   }
 
   public NPerson setContacts(final List<NPersonContact> contacts) {
@@ -121,11 +120,27 @@ public class NPerson
     if (!CollectionUtils.isEmpty(contacts)) {
       for (NPersonContact contact : contacts) {
         contact.setAssignee(this);
-        this.getContacts().add(contact);
+        this._getContacts().add(contact);
       }
       return true;
     }
     return false;
+  }
+
+  private List<NPersonContact> _getContacts() {
+    if (this.contacts == null) {
+      this.contacts = Lists.newArrayListWithExpectedSize(5);
+    }
+    return this.contacts;
+  }
+
+  @Override
+  public String getName() {
+    return this.getLastName();
+  }
+
+  public boolean addContact(final NPersonContact contact) {
+    return this.addContact(Collections.singleton(contact));
   }
 
 
