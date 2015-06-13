@@ -85,13 +85,13 @@ public interface NCarRepository
    * @return a {@link org.springframework.data.domain.Page} object.
    */
   @RestResource(path = "brand")
-  Page<NCar> findByCarMasterManufacturingDataBrandStartingWithIgnoreCase(
+  Page<NCar> findByCarMasterBrandStartingWithIgnoreCase(
     @Param(value = "brand") final String brand,
     final Pageable pageable
   );
 
   /**
-   * <p>findByCarMasterManufacturingDataModel.</p>
+   * <p>findByCarMasterModel.</p>
    *
    * @param model    a {@link String} object.
    * @param pageable a {@link org.springframework.data.domain.Pageable} object.
@@ -99,13 +99,13 @@ public interface NCarRepository
    * @return a {@link org.springframework.data.domain.Page} object.
    */
   @RestResource(path = "model")
-  Page<NCar> findByCarMasterManufacturingDataModelStartingWithIgnoreCase(
+  Page<NCar> findByCarMasterModelStartingWithIgnoreCase(
     @Param(value = "model") final String model,
     final Pageable pageable
   );
 
   /**
-   * <p>findByCarMasterManufacturingDataBrandAndCarMasterManufacturingDataModel.</p>
+   * <p>findByCarMasterBrandAndCarMasterModel.</p>
    *
    * @param brand    a {@link String} object.
    * @param model    a {@link String} object.
@@ -114,7 +114,7 @@ public interface NCarRepository
    * @return a {@link org.springframework.data.domain.Page} object.
    */
   @RestResource(path = "brand_and_model")
-  Page<NCar> findByCarMasterManufacturingDataBrandAndCarMasterManufacturingDataModelAllIgnoreCase(
+  Page<NCar> findByCarMasterBrandAndCarMasterModelAllIgnoreCase(
     @Param(value = "brand") final String brand,
     @Param(value = "model") final String model,
     final Pageable pageable

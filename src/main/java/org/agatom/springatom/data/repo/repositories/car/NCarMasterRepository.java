@@ -18,15 +18,14 @@
 package org.agatom.springatom.data.repo.repositories.car;
 
 import com.neovisionaries.i18n.CountryCode;
-
 import org.agatom.springatom.data.model.car.NCarMaster;
 import org.agatom.springatom.data.repo.repositories.NRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.Description;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.data.rest.core.annotation.Description;
 
 @RepositoryRestResource(
         itemResourceRel = NCarMasterRepository.ITEM_REL,
@@ -42,31 +41,31 @@ public interface NCarMasterRepository
     String REST_REPO_PATH = ITEM_REL;
 
     @RestResource(path = "brand_and_model")
-    NCarMaster findByManufacturingDataBrandAndManufacturingDataModelAllIgnoreCase(
+    NCarMaster findByBrandAndModelAllIgnoreCase(
       @Param("brand") final String brand,
       @Param("model") final String model
     );
 
     @RestResource(path = "brand")
-    Page<NCarMaster> findByManufacturingDataBrandIgnoreCase(
+    Page<NCarMaster> findByBrandIgnoreCase(
       @Param(value = "brand") final String brand,
       final Pageable pageable
     );
 
     @RestResource(path = "model")
-    Page<NCarMaster> findByManufacturingDataModelIgnoreCase(
+    Page<NCarMaster> findByModelIgnoreCase(
       @Param(value = "model") final String model,
       final Pageable pageable
     );
 
     @RestResource(path = "manufactured_in")
-    Page<NCarMaster> findByManufacturingDataCountry(
+    Page<NCarMaster> findByCountry(
       @Param(value = "cc") final CountryCode cc,
       final Pageable pageable
     );
 
     @RestResource(path = "manufactured_by")
-    Page<NCarMaster> findByManufacturingDataManufacturerStartingWithIgnoreCase(
+    Page<NCarMaster> findByManufacturerStartingWithIgnoreCase(
       @Param(value = "manufacturer") final String manufacturer,
       final Pageable pageable
     );

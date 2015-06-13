@@ -1,22 +1,23 @@
 /**************************************************************************************************
  * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
- *                                                                                                *
+ * *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
  * the Free Software Foundation, either version 3 of the License, or                              *
  * (at your option) any later version.                                                            *
- *                                                                                                *
+ * *
  * [SpringAtom] is distributed in the hope that it will be useful,                                *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
  * GNU General Public License for more details.                                                   *
- *                                                                                                *
+ * *
  * You should have received a copy of the GNU General Public License                              *
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
 package org.agatom.springatom.data.model.car;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.agatom.springatom.data.model.NAbstractAuditable;
 import org.agatom.springatom.data.model.user.NUser;
 import org.agatom.springatom.data.types.car.Car;
@@ -41,8 +42,8 @@ import javax.validation.constraints.NotNull;
 @Table
 @Entity
 public class NCar
-        extends NAbstractAuditable
-        implements Car<NUser, NCarMaster> {
+  extends NAbstractAuditable
+  implements Car<NUser, NCarMaster> {
   private static final long       serialVersionUID = -1473162805427581686L;
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -72,16 +73,6 @@ public class NCar
   private              Long       yearOfProduction = null;
 
   @Override
-  public NCarMaster getCarMaster() {
-    return carMaster;
-  }
-
-  public NCar setCarMaster(final NCarMaster carMaster) {
-    this.carMaster = carMaster;
-    return this;
-  }
-
-  @Override
   public String getLicencePlate() {
     return licencePlate;
   }
@@ -102,6 +93,7 @@ public class NCar
   }
 
   @Override
+  @JsonIgnore
   public String getBrand() {
     return this.carMaster.getBrand();
   }
@@ -112,6 +104,7 @@ public class NCar
   }
 
   @Override
+  @JsonIgnore
   public String getModel() {
     return this.carMaster.getModel();
   }
@@ -144,6 +137,16 @@ public class NCar
   @Override
   public String getVinNumber() {
     return vinNumber;
+  }
+
+  @Override
+  public NCarMaster getCarMaster() {
+    return carMaster;
+  }
+
+  public NCar setCarMaster(final NCarMaster carMaster) {
+    this.carMaster = carMaster;
+    return this;
   }
 
   public NCar setVinNumber(final String vinNumber) {
