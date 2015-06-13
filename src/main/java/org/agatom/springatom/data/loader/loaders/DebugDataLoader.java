@@ -3,14 +3,17 @@ package org.agatom.springatom.data.loader.loaders;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.neovisionaries.i18n.CountryCode;
 import org.agatom.springatom.data.loader.annotation.DataLoader;
 import org.agatom.springatom.data.loader.srv.DataLoaderService;
+import org.agatom.springatom.data.model.car.NCarMaster;
 import org.agatom.springatom.data.model.enumeration.NEnumerationEntry;
 import org.agatom.springatom.data.model.person.NPerson;
 import org.agatom.springatom.data.model.person.NPersonContact;
 import org.agatom.springatom.data.model.user.NUser;
 import org.agatom.springatom.data.model.user.authority.NRole;
 import org.agatom.springatom.data.repo.repositories.authority.NRoleRepository;
+import org.agatom.springatom.data.repo.repositories.car.NCarMasterRepository;
 import org.agatom.springatom.data.repo.repositories.person.NPersonRepository;
 import org.agatom.springatom.data.service.services.NEnumerationService;
 import org.agatom.springatom.data.service.services.NUserService;
@@ -28,18 +31,20 @@ import java.util.Random;
 @DataLoader
 class DebugDataLoader
   implements DataLoaderService {
-  private static final int                 MAX_VALS           = 50;
-  private static final int                 ROLES_COUNT        = 6;
-  private static final int                 CONTACTS_COUNT     = 12;
+  private static final int                  MAX_VALS            = 50;
+  private static final int                  ROLES_COUNT         = 6;
+  private static final int                  CONTACTS_COUNT      = 12;
   @Autowired
-  private              NUserService        userService        = null;
+  private              NUserService         userService         = null;
   @Autowired
-  private              NRoleRepository     roleRepository     = null;
+  private              NRoleRepository      roleRepository      = null;
   @Autowired
-  private              NPersonRepository   personRepository   = null;
+  private              NPersonRepository    personRepository    = null;
   @Autowired
-  private              NEnumerationService enumerationService = null;
-  private              List<NRole>         allRoles           = null;
+  private              NEnumerationService  enumerationService  = null;
+  @Autowired
+  private              NCarMasterRepository carMasterRepository = null;
+  private              List<NRole>          allRoles            = null;
 
   @Override
   public InstallationMarker loadData() {
@@ -50,6 +55,7 @@ class DebugDataLoader
 
     try {
       this.loadUsers(this.getCount(random));
+      this.loadCarMasters(this.getCount(random));
     } catch (Exception exp) {
       marker.setError(exp);
     }
@@ -158,6 +164,7 @@ class DebugDataLoader
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public <GA extends GrantedAuthority> Collection<GA> getAuthorities() {
           return (Collection<GA>) finalAuthorities;
         }
@@ -170,6 +177,27 @@ class DebugDataLoader
   private int getCount(final Random random) {
     final int abs = Math.abs(random.nextInt(MAX_VALS));
     return abs != 0 ? abs : 1;
+  }
+
+  private void loadCarMasters(int count) {
+    final Collection<NCarMaster> carMasters = Lists.newArrayListWithExpectedSize(count);
+    final CountryCode[] countryCodes = CountryCode.values();
+
+    final Random random = new Random(count);
+
+    while (count-- > 0) {
+      int nextInt = random.nextInt(countryCodes.length);
+      if (nextInt == countryCodes.length) {
+        nextInt--;
+      }
+      carMasters.add(
+        new NCarMaster(String.format("Brand_%d", count), String.format("Model_%d", count))
+          .setCountry(countryCodes[nextInt])
+          .setManufacturer(String.format("Manufactured_%d", count))
+      );
+    }
+
+    this.carMasterRepository.save(carMasters);
   }
 
   @Override
