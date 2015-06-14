@@ -12,9 +12,9 @@ import org.joda.time.DateTime;
  * @since 0.0.1
  */
 public interface SimpleNotification {
-    String getMessage();
+  String getMessage();
 
-    DateTime getSent();
+  DateTime getSent();
 
-    Boolean isRead();
+  Boolean isRead();
 }

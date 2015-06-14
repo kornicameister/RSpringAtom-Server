@@ -25,7 +25,6 @@ public interface NDataInstallationStatusRepository
   String COLLECTION_REL = "data_installation_statuses";
   String REST_REPO_PATH = ITEM_REL;
 
-
   @RestResource(path = "status")
   Page<NDataInstallationStatus> getByInstallationStatus(@Param("status") final DataInstallationStatus.InstallStatus status, final Pageable pageable);
 

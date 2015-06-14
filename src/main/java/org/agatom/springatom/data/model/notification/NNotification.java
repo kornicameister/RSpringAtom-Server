@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.data.model.notification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.agatom.springatom.data.model.NAbstractPersistable;
 import org.agatom.springatom.data.types.notification.Notification;
 import org.hibernate.annotations.Type;
@@ -54,6 +55,7 @@ public class NNotification
   @Type(type = DATE_TIME_TYPE)
   @Column(name = "nam_sent", nullable = false)
   private              DateTime             sent             = null;
+  @JsonIgnore
   @JoinColumn(updatable = false, name = "nan_t")
   @OneToOne(fetch = FetchType.EAGER, optional = true, cascade = {
     CascadeType.REFRESH,
@@ -61,6 +63,7 @@ public class NNotification
     CascadeType.PERSIST
   })
   private              NNotificationTarget  target           = null;
+  @JsonIgnore
   @JoinColumn(updatable = false, name = "nan_s")
   @OneToOne(fetch = FetchType.EAGER, optional = true, cascade = {
     CascadeType.REFRESH,
@@ -87,6 +90,11 @@ public class NNotification
   @Override
   public Boolean isRead() {
     return this.read;
+  }
+
+  public NNotification setSent(final DateTime dt) {
+    this.sent = new DateTime(dt);
+    return this;
   }
 
   public NNotification setMessage(final String notification) {
@@ -123,11 +131,6 @@ public class NNotification
 
   public NNotification setNotRead() {
     this.read = false;
-    return this;
-  }
-
-  public NNotification setSent(final DateTime dt) {
-    this.sent = new DateTime(dt);
     return this;
   }
 
