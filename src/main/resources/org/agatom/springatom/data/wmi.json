@@ -1,0 +1,520 @@
+{
+   "wmi": [
+      {
+         "country": "United States",
+         "codes"  : [
+            "10-19",
+            "40-59",
+            "1A-1Z",
+            "4A-5Z"
+         ]
+      },
+      {
+         "country": "Canada",
+         "codes"  : [
+            "20-29",
+            "2A-2Z"
+         ]
+      },
+      {
+         "country": "Cayman Islands",
+         "codes"  : [
+            "30",
+            "38-39"
+         ]
+      },
+      {
+         "country": "Costa Rica",
+         "codes"  : [
+            "31-37",
+            "3X-3W"
+         ]
+      },
+      {
+         "country": "Trinidad and Tobago",
+         "codes"  : [
+            "91-92",
+            "9X-9Z"
+         ]
+      },
+      {
+         "country": "Mexico",
+         "codes"  : [
+            "3A-3W"
+         ]
+      },
+      {
+         "country": "Australia",
+         "codes"  : [
+            "6A-6W"
+         ]
+      },
+      {
+         "country": "New Zealand",
+         "codes"  : [
+            "7A-7E"
+         ]
+      },
+      {
+         "country": "Argentina",
+         "codes"  : [
+            "8A-8E"
+         ]
+      },
+      {
+         "country": "Chile",
+         "codes"  : [
+            "8F-8k"
+         ]
+      },
+      {
+         "country": "Ecuador",
+         "codes"  : [
+            "8L-8R"
+         ]
+      },
+      {
+         "country": "Peru",
+         "codes"  : [
+            "8S-8W"
+         ]
+      },
+      {
+         "country": "Venezuela, Bolivarian Republic of",
+         "codes"  : [
+            "8X-8Z"
+         ]
+      },
+      {
+         "country": "Brazil",
+         "codes"  : [
+            "9A-9E"
+         ]
+      },
+      {
+         "country": "Saudi Arabia",
+         "codes"  : [
+            "R0",
+            "RS-RZ"
+         ]
+      },
+      {
+         "country": "Viet Nam",
+         "codes"  : [
+            "RL-RR"
+         ]
+      },
+      {
+         "country": "Taiwan, Province of China",
+         "codes"  : [
+            "RF-RK"
+         ]
+      },
+      {
+         "country": "United Arab Emirates",
+         "codes"  : [
+            "RA-RE"
+         ]
+      },
+      {
+         "country": "Malaysia",
+         "codes"  : [
+            "PL-PR"
+         ]
+      },
+      {
+         "country": "Singapore",
+         "codes"  : [
+            "PF-PK"
+         ]
+      },
+      {
+         "country": "Philippines",
+         "codes"  : [
+            "PA-PE"
+         ]
+      },
+      {
+         "country": "Turkey",
+         "codes"  : [
+            "NL-NR"
+         ]
+      },
+      {
+         "country": "Pakistan",
+         "codes"  : [
+            "NF-NK"
+         ]
+      },
+      {
+         "country": "Thailand",
+         "codes"  : [
+            "ML-MR"
+         ]
+      },
+      {
+         "country": "Indonesia",
+         "codes"  : [
+            "MF-MK"
+         ]
+      },
+      {
+         "country": "India",
+         "codes"  : [
+            "MA-ME"
+         ]
+      },
+      {
+         "country": "China",
+         "codes"  : [
+            "L0-L9",
+            "LA-LZ"
+         ]
+      },
+      {
+         "country": "Korea, Republic of",
+         "codes"  : [
+            "KL-KR"
+         ]
+      },
+      {
+         "country": "Israel",
+         "codes"  : [
+            "KF-KK"
+         ]
+      },
+      {
+         "country": "Sri Lanka",
+         "codes"  : [
+            "KA-KE"
+         ]
+      },
+      {
+         "country": "Japan",
+         "codes"  : [
+            "JA-JT"
+         ]
+      },
+      {
+         "country": "Nigeria",
+         "codes"  : [
+            "FF-FK"
+         ]
+      },
+      {
+         "country": "Ghana",
+         "codes"  : [
+            "FA-FE"
+         ]
+      },
+      {
+         "country": "Mozambique",
+         "codes"  : [
+            "EF-EK"
+         ]
+      },
+      {
+         "country": "Ethiopia",
+         "codes"  : [
+            "EA-EE"
+         ]
+      },
+      {
+         "country": "Zambia",
+         "codes"  : [
+            "DL-DR"
+         ]
+      },
+      {
+         "country": "Morocco",
+         "codes"  : [
+            "DF-DK"
+         ]
+      },
+      {
+         "country": "Egypt",
+         "codes"  : [
+            "DA-DE"
+         ]
+      },
+      {
+         "country": "Tunisia",
+         "codes"  : [
+            "CL-CR"
+         ]
+      },
+      {
+         "country": "Madagascar",
+         "codes"  : [
+            "CF-CK"
+         ]
+      },
+      {
+         "country": "Benin",
+         "codes"  : [
+            "CA-CE"
+         ]
+      },
+      {
+         "country": "Tanzania, United Republic of",
+         "codes"  : [
+            "BK-BR"
+         ]
+      },
+      {
+         "country": "Kenya",
+         "codes"  : [
+            "BF-BK"
+         ]
+      },
+      {
+         "country": "Angola",
+         "codes"  : [
+            "BA-BE"
+         ]
+      },
+      {
+         "country": "Russian Federation",
+         "codes"  : [
+            "AJ-AN"
+         ]
+      },
+      {
+         "country": "South Africa",
+         "codes"  : [
+            "AB-AH"
+         ]
+      },
+      {
+         "country": "Uruguay",
+         "codes"  : [
+            "9S-9W"
+         ]
+      },
+      {
+         "country": "Paraguay",
+         "codes"  : [
+            "9L-9R"
+         ]
+      },
+      {
+         "country": "Colombia",
+         "codes"  : [
+            "9F-9K"
+         ]
+      },
+      {
+         "country": "Latvia",
+         "codes"  : [
+            "S1-S4"
+         ]
+      },
+      {
+         "country": "United Kingdom",
+         "codes"  : [
+            "SA-SM"
+         ]
+      },
+      {
+         "country": "Germany",
+         "codes"  : [
+            "SN-ST",
+            "W0-WZ"
+         ]
+      },
+      {
+         "country": "Poland",
+         "codes"  : [
+            "SU-SZ"
+         ]
+      },
+      {
+         "country": "Portugal",
+         "codes"  : [
+            "T1",
+            "TW-TZ"
+         ]
+      },
+      {
+         "country": "Switzerland",
+         "codes"  : [
+            "TA-TH"
+         ]
+      },
+      {
+         "country": "Czech Republic",
+         "codes"  : [
+            "TJ-TP"
+         ]
+      },
+      {
+         "country": "Hungary",
+         "codes"  : [
+            "TR-TV"
+         ]
+      },
+      {
+         "country": "Slovakia",
+         "codes"  : [
+            "U5-U7"
+         ]
+      },
+      {
+         "country": "Denmark",
+         "codes"  : [
+            "UH-UM"
+         ]
+      },
+      {
+         "country": "Ireland",
+         "codes"  : [
+            "UN-UT"
+         ]
+      },
+      {
+         "country": "Romania",
+         "codes"  : [
+            "UU-UZ"
+         ]
+      },
+      {
+         "country": "Estonia",
+         "codes"  : [
+            "V0",
+            "V6-V9"
+         ]
+      },
+      {
+         "country": "Serbia",
+         "codes"  : [
+            "V1-V2",
+            "VX-VZ"
+         ]
+      },
+      {
+         "country": "Croatia",
+         "codes"  : [
+            "V3-V5"
+         ]
+      },
+      {
+         "country": "Austria",
+         "codes"  : [
+            "VA-VE"
+         ]
+      },
+      {
+         "country": "France",
+         "codes"  : [
+            "VF-VR"
+         ]
+      },
+      {
+         "country": "Spain",
+         "codes"  : [
+            "VS-VV"
+         ]
+      },
+      {
+         "country": "Russian Federation",
+         "codes"  : [
+            "X0",
+            "X3-X9"
+         ]
+      },
+      {
+         "country": "Luxembourg",
+         "codes"  : [
+            "X1-X2",
+            "XX-XZ"
+         ]
+      },
+      {
+         "country": "Bulgaria",
+         "codes"  : [
+            "XA-XE"
+         ]
+      },
+      {
+         "country": "Greece",
+         "codes"  : [
+            "XF-XK"
+         ]
+      },
+      {
+         "country": "Netherlands",
+         "codes"  : [
+            "XL-XR"
+         ]
+      },
+      {
+         "country": "USSR",
+         "codes"  : [
+            "XS-XW"
+         ]
+      },
+      {
+         "country": "Ukraine",
+         "codes"  : [
+            "Y0",
+            "Y6-Y9"
+         ]
+      },
+      {
+         "country": "Norway",
+         "codes"  : [
+            "Y1-Y2",
+            "YX-YZ"
+         ]
+      },
+      {
+         "country": "Belarus",
+         "codes"  : [
+            "Y3-Y5"
+         ]
+      },
+      {
+         "country": "Belgium",
+         "codes"  : [
+            "YA-YE"
+         ]
+      },
+      {
+         "country": "Finland",
+         "codes"  : [
+            "YF-YK"
+         ]
+      },
+      {
+         "country": "Malta",
+         "codes"  : [
+            "YL-YR"
+         ]
+      },
+      {
+         "country": "Sweden",
+         "codes"  : [
+            "YS-YW"
+         ]
+      },
+      {
+         "country": "Slovenia",
+         "codes"  : [
+            "Z1-Z2",
+            "ZX-ZZ"
+         ]
+      },
+      {
+         "country": "Lithuania",
+         "codes"  : [
+            "Z3-Z5"
+         ]
+      },
+      {
+         "country": "Italy",
+         "codes"  : [
+            "ZA-ZR"
+         ]
+      }
+   ]
+}
