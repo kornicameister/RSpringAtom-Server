@@ -1,4 +1,4 @@
-package org.agatom.springatom.mvc.controllers;
+package org.agatom.springatom.rest.controllers;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
