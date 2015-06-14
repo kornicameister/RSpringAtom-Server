@@ -24,9 +24,7 @@ import org.springframework.core.Ordered;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @DataLoader
 class DebugDataLoader
@@ -181,18 +179,27 @@ class DebugDataLoader
 
   private void loadCarMasters(int count) {
     final Collection<NCarMaster> carMasters = Lists.newArrayListWithExpectedSize(count);
-    final CountryCode[] countryCodes = CountryCode.values();
-
-    final Random random = new Random(count);
+    final ArrayList<CountryCode> codes = Lists.newArrayList(CountryCode.values());
+    Iterator<CountryCode> countryCodes = codes.iterator();
 
     while (count-- > 0) {
-      int nextInt = random.nextInt(countryCodes.length);
-      if (nextInt == countryCodes.length) {
-        nextInt--;
+      CountryCode next = null;
+      if (!countryCodes.hasNext()) {
+        countryCodes = codes.iterator();
+      } else {
+        next = countryCodes.next();
+        if (next == CountryCode.UNDEFINED) {
+          if (countryCodes.hasNext()) {
+            next = countryCodes.next();
+          } else {
+            countryCodes = codes.iterator();
+            next = countryCodes.next();
+          }
+        }
       }
       carMasters.add(
         new NCarMaster(String.format("Brand_%d", count), String.format("Model_%d", count))
-          .setCountry(countryCodes[nextInt])
+          .setCountry(next)
           .setManufacturer(String.format("Manufactured_%d", count))
       );
     }
