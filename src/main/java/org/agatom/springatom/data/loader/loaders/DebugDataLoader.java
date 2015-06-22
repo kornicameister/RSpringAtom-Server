@@ -20,6 +20,7 @@ import org.agatom.springatom.data.service.services.NUserService;
 import org.agatom.springatom.data.service.services.NUserService.UserRegistrationBean;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,8 +28,9 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.*;
 
 @DataLoader
+@ConditionalOnProperty(name = "debug", havingValue = "true")
 class DebugDataLoader
-  implements DataLoaderService {
+    implements DataLoaderService {
   private static final int                  MAX_VALS            = 50;
   private static final int                  ROLES_COUNT         = 6;
   private static final int                  CONTACTS_COUNT      = 12;
@@ -75,7 +77,7 @@ class DebugDataLoader
     long latestPersonId;
     int subItemsProcessed;
     latestPersonId = this.personRepository.findAll(
-      new Sort(Sort.Direction.DESC, "id")
+        new Sort(Sort.Direction.DESC, "id")
     ).get(0).getId();
 
     final Collection<UserRegistrationBean> beans = Lists.newArrayListWithExpectedSize(count);
@@ -84,15 +86,15 @@ class DebugDataLoader
       person = null;
       authorities = null;
       user = new NUser()
-        .setUsername(String.format("user_%d", count))
-        .setPassword("test")
-        .setAccountNonLocked(count % 2 == 0)
-        .setEmail(String.format("user_%d@gmail.com", count));
+          .setUsername(String.format("user_%d", count))
+          .setPassword("test")
+          .setAccountNonLocked(count % 2 == 0)
+          .setEmail(String.format("user_%d@gmail.com", count));
 
       if (count % 3 == 0) {
         person = new NPerson()
-          .setFirstName(String.format("John %d", latestPersonId + (count == 0 ? count + 1 : count)))
-          .setLastName("Doe");
+            .setFirstName(String.format("John %d", latestPersonId + (count == 0 ? count + 1 : count)))
+            .setLastName("Doe");
 
         final Random random = new Random(DateTime.now().hashCode());
         final int nextInt = random.nextInt(CONTACTS_COUNT);
@@ -116,9 +118,9 @@ class DebugDataLoader
           }
 
           person.addContact(
-            (NPersonContact) new NPersonContact()
-              .setType(type)
-              .setContact(contact)
+              (NPersonContact) new NPersonContact()
+                  .setType(type)
+                  .setContact(contact)
           );
 
           subItemsProcessed++;
@@ -198,9 +200,9 @@ class DebugDataLoader
         }
       }
       carMasters.add(
-        new NCarMaster(String.format("Brand_%d", count), String.format("Model_%d", count))
-          .setCountry(next)
-          .setManufacturer(String.format("Manufactured_%d", count))
+          new NCarMaster(String.format("Brand_%d", count), String.format("Model_%d", count))
+              .setCountry(next)
+              .setManufacturer(String.format("Manufactured_%d", count))
       );
     }
 
