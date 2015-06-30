@@ -17,11 +17,11 @@
 
 package org.agatom.springatom.data.vin.validator;
 
+import com.google.common.base.Preconditions;
 import org.agatom.springatom.data.model.vin.VinNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 
 @Component
@@ -32,12 +32,8 @@ class VinNumberValidator
   private static final int[]  WEIGHTS    = {8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2};
 
   @Override
-  public boolean supports(final Class<?> clazz) {
-    return ClassUtils.isAssignable(VinNumber.class, clazz) || ClassUtils.isAssignable(String.class, clazz);
-  }
-
-  @Override
   public void validate(final Object target, final Errors errors) {
+    Preconditions.checkNotNull(target, "target");
     final String vinNumber = ((VinNumber) target).getNumber();
     if (!this.validate(vinNumber)) {
       errors.reject("number", String.format("Invalid checksum of vin=%s", vinNumber));
